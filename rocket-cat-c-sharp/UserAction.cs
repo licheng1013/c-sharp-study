@@ -6,15 +6,15 @@ namespace rocket_cat_c_sharp;
 public class UserAction
 {
     [ActionMethod(SubCmd = 1)]
-    public void Login(User user)
+    public void Login(UserInfo userInfo)
     {
-        Console.WriteLine("Login -> " + user.Name);
+        Console.WriteLine("Login -> " + userInfo.Name);
     }
     
     
-    [ActionMethod(SubCmd = 2)]
-    public void LoginOut()
-    {
-        Console.WriteLine("logout");
-    }
+    // [ActionMethod(SubCmd = 2)]
+    // public void LoginOut(User user)
+    // {
+    //     Console.WriteLine("logout");
+    // }
 }

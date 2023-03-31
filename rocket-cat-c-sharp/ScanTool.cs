@@ -3,6 +3,23 @@ using System.Text.Json;
 
 namespace rocket_cat_c_sharp;
 
+// 解码器
+public interface IEncoder
+{
+    // 反序列化
+    public Object Deserialize(byte[] data, Type type);
+}
+
+// json解码器
+public class JsonEncoder : IEncoder
+{
+    public object Deserialize(byte[] data, Type type)
+    {
+        return JsonSerializer.Deserialize(data, type);
+    }
+}
+
+
 public class ScanTool
 {
     // 保存所有反射实例,主路由命令为key,实例为value
@@ -13,6 +30,10 @@ public class ScanTool
 
     // 保存参数类型 MethodMap.key = Type类型
     private static readonly Dictionary<int, Type> ParamTypeMap = new();
+    
+    // 数据反序列化,输入参数为字节数组 和 参数类型 输出 参数类型的实例
+    private static readonly IEncoder Encoder = new JsonEncoder();
+    
 
     // 测试
     public static void Run()
@@ -20,12 +41,11 @@ public class ScanTool
         // 扫描所有类和方法
         ScanMethod(new UserAction());
         // 定义User
-        var user = new User { Name = "张三", Age = 18 };
+        var user = new UserInfo { Name = "张三", Age = 18 };
         // 序列化
         var data = JsonSerializer.SerializeToUtf8Bytes(user);
         // 执行方法
         InvokeMethod(RouterUtil.GetMergeCmd(1, 1), data);
-        InvokeMethod(RouterUtil.GetMergeCmd(1, 2));
     }
 
     // 执行方法
@@ -39,9 +59,14 @@ public class ScanTool
         if (ParamTypeMap.TryGetValue(mergeCmd, out var value))
         {
             // 反序列化
-            var param = JsonSerializer.Deserialize(data, value);
+            if (data == null)
+            {
+                Console.WriteLine("参数为空, 请检查是否有参数");
+                return;
+            }
+            var param = Encoder.Deserialize(data, value);;
             // 执行方法
-            MethodMap[RouterUtil.GetMergeCmd(cmd, subCmd)].Invoke(CacheMap[cmd], new[] { param });
+            MethodMap[RouterUtil.GetMergeCmd(cmd, subCmd)].Invoke(CacheMap[cmd], new object?[] { param });
             return;
         }
 
