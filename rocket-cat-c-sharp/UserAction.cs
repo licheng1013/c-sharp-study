@@ -2,14 +2,19 @@
 
 namespace rocket_cat_c_sharp;
 
-[Action(Cmd = 1)]
+[ActionClass(Cmd = 1)]
 public class UserAction
 {
-
-    [Action(SubCmd = 1)]
+    [ActionMethod(SubCmd = 1)]
     public void Login()
     {
         Console.WriteLine("Login");
     }
     
+    
+    [ActionMethod(SubCmd = 2)]
+    public void LoginOut()
+    {
+        Console.WriteLine("logout");
+    }
 }
