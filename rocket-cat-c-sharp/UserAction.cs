@@ -6,9 +6,9 @@ namespace rocket_cat_c_sharp;
 public class UserAction
 {
     [ActionMethod(SubCmd = 1)]
-    public void Login()
+    public void Login(User user)
     {
-        Console.WriteLine("Login");
+        Console.WriteLine("Login -> " + user.Name);
     }
     
     
