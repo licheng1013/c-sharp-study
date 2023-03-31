@@ -1,68 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Buffers;
+using System.Diagnostics;
+using System.Net;
+using System.Net.Sockets.Kcp;
+using System.Net.Sockets.Kcp.Simple;
 using System.Text;
-using System.Threading;
 
-namespace KcpProject.Sample
+namespace kcp_demo;
+
+internal abstract class Program
 {
-    class Program
+    private static void Main(string[] args)
     {
-        static void Main(string[] args)
+        // 使用kcp建立连接
+        var kcp = new SimpleKcpClient(50001, new IPEndPoint(IPAddress.Loopback, 12355));
+        kcp.kcp.TraceListener = new ConsoleTraceListener();
+        Task.Run(async () =>
         {
-            var connection = new UDPSession();
-            connection.AckNoDelay = true;
-            connection.WriteDelay = false;
-
-            connection.Connect("localhost", 12355);
-
-            var stopSend = false;
-            var buffer = new byte[2048];
-            var counter = 0;
-            var sendBytes = 0;
-            var recvBytes = 0;
-
-            while (true) {
-                connection.Update();
-
-                if (!stopSend)  {
-                    //firstSend = false;
-                    // Console.WriteLine("Write Message...");
-                    //var text = Encoding.UTF8.GetBytes(string.Format("Hello KCP: {0}", ++counter));
-                    var sent = connection.Send(buffer, 0, buffer.Length);
-                    if (sent < 0) {
-                        Console.WriteLine("Write message failed.");
-                        break;
-                    }
-
-                    if (sent > 0)
-                    {
-                        counter++;
-                        sendBytes += buffer.Length;
-                        if (counter >= 500)
-                            stopSend = true;
-                    }
-                }
-
-                var n = connection.Recv(buffer, 0, buffer.Length);
-                if (n == 0)
-                {
-                    Thread.Sleep(10);
-                    continue;
-                }
-                else if (n < 0)
-                {
-                    Console.WriteLine("Receive Message failed.");
-                    break;
-                }
-                else {
-                    recvBytes += n;
-                    Console.WriteLine($"{recvBytes} / {sendBytes}");
-                }
-
-                //var resp = Encoding.UTF8.GetString(buffer, 0, n);
-                //Console.WriteLine("Received Message: " + resp);
+            while (true)
+            {
+                kcp.kcp.Update(DateTimeOffset.UtcNow);
+                await Task.Delay(10);
+                var resp = await kcp.ReceiveAsync();
+                var rest = Encoding.UTF8.GetString(resp);
+                Console.WriteLine($"收到服务器回复:    {rest}");
             }
+        });
+        while (true)
+        {
+            Send(kcp, "发送一条消息");
+            // 休眠一下，让kcp有时间发送
+            Thread.Sleep(3000);
+            // 发送消息打印
+            Console.WriteLine($"发送消息:   发送一条消息");
         }
+    }
+
+    static void Send(SimpleKcpClient client, string v)
+    {
+        var buffer = Encoding.UTF8.GetBytes(v);
+        client.SendAsync(buffer, buffer.Length);
     }
 }
