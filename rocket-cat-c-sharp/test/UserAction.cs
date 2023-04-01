@@ -1,4 +1,5 @@
 ﻿using System.Reflection.Metadata.Ecma335;
+using ProtoBuf;
 
 namespace rocket_cat_c_sharp;
 
@@ -12,9 +13,18 @@ public class UserAction
     }
     
     
-    // [ActionMethod(SubCmd = 2)]
-    // public void LoginOut(User user)
-    // {
-    //     Console.WriteLine("logout");
-    // }
+    [ActionMethod(SubCmd = 2)]
+    public void LoginOut(Person user)
+    {
+        Console.WriteLine("logout");
+    }
+}
+
+
+[ProtoContract]
+public class Person {
+    [ProtoMember(1)]
+    public int Id {get;set;}
+    [ProtoMember(2)]
+    public string Name {get;set;}
 }

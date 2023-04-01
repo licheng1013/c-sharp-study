@@ -1,5 +1,7 @@
-﻿using System.Reflection;
+﻿using System.Buffers;
+using System.Reflection;
 using System.Text.Json;
+using ProtoBuf;
 
 namespace rocket_cat_c_sharp;
 
@@ -20,6 +22,17 @@ public class JsonEncoder : IEncoder
 }
 
 
+// json解码器
+public class ProtoEncoder : IEncoder
+{
+    public object Deserialize(byte[] data, Type type)
+    {
+        return Serializer.Deserialize((ReadOnlyMemory<byte>)data, type);
+    }
+}
+
+
+
 public class ScanTool
 {
     // 保存所有反射实例,主路由命令为key,实例为value
@@ -32,12 +45,12 @@ public class ScanTool
     private static readonly Dictionary<int, Type> ParamTypeMap = new();
     
     // 数据反序列化,输入参数为字节数组 和 参数类型 输出 参数类型的实例
-    private static readonly IEncoder Encoder = new JsonEncoder();
+    private static  IEncoder Encoder;
     
-
     // 测试
-    public static void Run()
+    public static void RunJson()
     {
+        Encoder = new JsonEncoder();
         // 扫描所有类和方法
         ScanMethod(new UserAction());
         // 定义User
@@ -48,6 +61,21 @@ public class ScanTool
         InvokeMethod(RouterUtil.GetMergeCmd(1, 1), data);
     }
 
+    public static void RunProto()
+    {
+        Encoder = new ProtoEncoder();
+        // 扫描所有类和方法
+        ScanMethod(new UserAction());
+        // 定义User
+        var user = new Person() { Name = "张三", Id = 18 };
+        // 序列化
+        IBufferWriter<byte> data = new ArrayBufferWriter<byte>();
+        Serializer.Serialize(data, user);
+        // 打印data大小
+        Console.WriteLine(data.GetMemory().Length);
+        // 执行方法
+        //InvokeMethod(RouterUtil.GetMergeCmd(1, 2), data.GetMemory().ToArray());
+    }
     // 执行方法
     // 如果出现 JsonReaderException 异常, 请检查是否有参数类型不匹配
     private static void InvokeMethod(int mergeCmd, byte[]? data = null)
