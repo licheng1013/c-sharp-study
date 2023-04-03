@@ -45,40 +45,11 @@ public class ScanTool
     private static readonly Dictionary<int, Type> ParamTypeMap = new();
     
     // 数据反序列化,输入参数为字节数组 和 参数类型 输出 参数类型的实例
-    private static  IEncoder Encoder;
-    
-    // 测试
-    public static void RunJson()
-    {
-        Encoder = new JsonEncoder();
-        // 扫描所有类和方法
-        ScanMethod(new UserAction());
-        // 定义User
-        var user = new UserInfo { Name = "张三", Age = 18 };
-        // 序列化
-        var data = JsonSerializer.SerializeToUtf8Bytes(user);
-        // 执行方法
-        InvokeMethod(RouterUtil.GetMergeCmd(1, 1), data);
-    }
+    public static  IEncoder Encoder;
 
-    public static void RunProto()
-    {
-        Encoder = new ProtoEncoder();
-        // 扫描所有类和方法
-        ScanMethod(new UserAction());
-        // 定义User
-        var user = new Person() { Name = "张三", Id = 18 };
-        // 序列化
-        IBufferWriter<byte> data = new ArrayBufferWriter<byte>();
-        Serializer.Serialize(data, user);
-        // 打印data大小
-        Console.WriteLine(data.GetMemory().Length);
-        // 执行方法
-        //InvokeMethod(RouterUtil.GetMergeCmd(1, 2), data.GetMemory().ToArray());
-    }
     // 执行方法
     // 如果出现 JsonReaderException 异常, 请检查是否有参数类型不匹配
-    private static void InvokeMethod(int mergeCmd, byte[]? data = null)
+    public static void InvokeMethod(int mergeCmd, byte[]? data = null)
     {
         // 拆分
         var cmd = RouterUtil.GetCmd(mergeCmd);
@@ -104,7 +75,7 @@ public class ScanTool
 
 
     // 扫描所有类并判断是否存在 Action 注解, 然后扫描所有方法并判断是否存在 Action 注解，最后执行方法
-    private static void ScanMethod(params object[] objects)
+    public static void ScanMethod(params object[] objects)
     {
         var types = objects.Select(o => o.GetType()).ToList();
         // 扫描所有类
