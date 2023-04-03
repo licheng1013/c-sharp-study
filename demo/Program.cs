@@ -15,14 +15,20 @@ namespace demo
         // 测试语言
         public static void MainLanguage()
         {
-            // Properties props = new Properties();
-            // using (FileStream fs = new FileStream("config.properties", FileMode.Open))
-            // {
-            //     props.Load(fs);
-            // }
-            
-            //LanguageManager.Instance.UseLanguage();
-   
+            LanguageManager.Instance.LoadJson(LanguageEnum.Chinese
+                , "E:\\my-study\\c-sharp-study\\c-sharp-study\\demo\\Chinese.json");
+            LanguageManager.Instance.LoadProperties(LanguageEnum.English
+                , "E:\\my-study\\c-sharp-study\\c-sharp-study\\demo\\Chinese.properties");
+            LanguageManager.Instance.UseLanguage(map =>
+            {
+                Console.WriteLine(map["name"]);
+            });
+            // 切换语言会触发闭包函数
+            LanguageManager.Instance.ChangeLanguage(LanguageEnum.English);
+            LanguageManager.Instance.UseLanguage(map =>
+            {
+                Console.WriteLine(map["name"]);
+            });
         }
         
         
