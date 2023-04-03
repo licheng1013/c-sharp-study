@@ -12,6 +12,20 @@ namespace demo
     internal static class Program
     {
         
+        // 测试语言
+        public static void MainLanguage()
+        {
+            // Properties props = new Properties();
+            // using (FileStream fs = new FileStream("config.properties", FileMode.Open))
+            // {
+            //     props.Load(fs);
+            // }
+            
+            //LanguageManager.Instance.UseLanguage();
+   
+        }
+        
+        
         // 测试
         public static void Main()
         {
