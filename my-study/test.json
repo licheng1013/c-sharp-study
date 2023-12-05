@@ -1,0 +1,16 @@
+﻿{
+  "name": "UserA",
+  "comment": "",
+  "fields": [
+    {
+      "name": "Name",
+      "type": "string",
+      "comment": "// 名称"
+    },
+    {
+      "name": "Age",
+      "type": "int",
+      "comment": "// 年龄"
+    }
+  ]
+}
