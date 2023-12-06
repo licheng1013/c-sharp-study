@@ -49,3 +49,12 @@ public enum SkillEnum
     s技能5,
     s技能6,
 }
+
+
+public enum PlayerEnum
+{
+    p1,
+    p2,
+    p3,
+    p4,
+}
