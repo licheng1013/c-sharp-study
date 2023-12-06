@@ -1,16 +1,13 @@
 ﻿{
-  "name": "UserA",
-  "comment": "",
-  "fields": [
-    {
-      "name": "Name",
-      "type": "string",
-      "comment": "// 名称"
-    },
-    {
-      "name": "Age",
-      "type": "int",
-      "comment": "// 年龄"
-    }
+  "type": "SkillEnum",
+  "desc": "枚举",
+  "selectValue": [
+    "s普攻",
+    "s技能1",
+    "s技能2",
+    "s技能3",
+    "s技能4",
+    "s技能5",
+    "s技能6"
   ]
 }

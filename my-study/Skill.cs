@@ -21,6 +21,9 @@ public class Skill
     /// 技能冷却时间
     public float cd;
     
+    /// 技能消耗
+    public int cost;
+    
     
 }
 
@@ -36,4 +39,13 @@ public  class UserA
 
 }
 
-
+public enum SkillEnum
+{
+    s普攻,
+    s技能1,
+    s技能2,
+    s技能3,
+    s技能4,
+    s技能5,
+    s技能6,
+}
