@@ -12,6 +12,7 @@ public class JsonTest{
         Console.WriteLine(json);
         var myTest2 = JsonConvert.DeserializeObject<MyTest>(json);
         Console.WriteLine(myTest2);
+        
     }
 }
 
