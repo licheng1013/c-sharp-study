@@ -1,29 +1,23 @@
-﻿namespace my_study;
+﻿using System;
+using System.Net.Http.Headers;
+
+namespace my_study;
 
 public class TestUtil
 {
     public static void Test()
     {
-        switch (SkillEnum.s普攻) {
-            case SkillEnum.s普攻:
-                break;
-            case SkillEnum.s技能1:
-                break;
-            case SkillEnum.s技能2:
-                break;
-            case SkillEnum.s技能3:
-                break;
-            case SkillEnum.s技能4:
-                break;
-            case SkillEnum.s技能5:
-                break;
-            case SkillEnum.s技能6:
-                break;
-            default:
-                throw new Exception($"未知类型 {SkillEnum.s普攻}");
-                break;
-        }
-        
-        
+       switch (0) {
+           case 0:
+               break;
+           case 1:
+               break;
+           case 2:
+               break;
+           default:
+               throw new Exception($"未知类型 {0}");
+               break;
+       }
+
     }
 }
